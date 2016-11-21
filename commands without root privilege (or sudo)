@@ -1,1 +1,76 @@
+0	Notes
+This is not at all complete and there may even be some mistakes in it. I just wrote it to give a very brief introduction and to show some basics on which someone could build their knowledge by googling and practicing.
 
+I will use the following notations (like in Bacus-Naur-Form):
+"something" means that i mean the exact string something letter by letter (but not the quotation marks)
+<something> means that it should be replaced by any word fitting the word in the brackets (like <name> could stand for R3V1S0R)
+[something] means that the word in brackets is optional and may be skipped (even though using it may change the functionality)
+a|b means a or b (not both).
+
+
+1	The filesystem
+Every unix systems file structure is based on the same principle.
+There is a root directory which is denoted as "/".
+In "/" there are some subdirectories again including subdirectories and like that the whole directory- and filestructure is built. For example there is a directory with the name of yourself (the user (followed by a slash)) which is in a directory called "home/" which is in the directory "/"
+Expressed in a compact way this is the directory /home/<yourname>/.
+So by just concatenating the directory names you can write the absolute path.
+Another thing: upper and lower case make a difference in unix, so you need to be exact here.
+
+
+2	Paths in the filesystem
+Paths can be specified in an absolute way (giving information on how to come from "/" to the endpoint) or in a relative way (relative to your current position in the directory tree). Relative paths do not start with "/". Instead they can start in 3 different possible ways:
+Either they start with just the name of a directory or file which is located inside the directory which you are located at,
+or they start with "./" which is almost the same thing since "./" specifies the directory you are currently in,
+or they start with "../" which is the next directory upwards in the directory tree.
+So assuming i want to address the directory /home/revisor/tmp/ and i am currently located at /home/revisor/ i can refer to it as
+either /home/revisor/tmp/
+or tmp/
+or ./tmp/
+or ../revisor/tmp/ (even though this is pretty useless, because i am going upwards just to go down to the same directory again. ;) Reasonable example for this would be if i were in /home/revisor/ and i wanted to address /home/ i could just write ../ )
+
+If you want to address multiple paths at once you can use the star "*". It means everything possible. For example "/home/*" are all the home directories of all the different users.
+
+
+3	The shell
+Whenever you log in to a unix based computer or server you will end up in a command line showing you a shell. shell (like kind of a hull) is something to make it possible to communicate as a user outside the system with the operating system or any of its functions.
+A shell prompt usually consists of three things (by default, but that can be changed). It contains your username, then an "@" followed by the host name, then a ":" and then a short form of the absolute path where you are currently at (your current position in the directory tree) followed by a "$".
+
+
+4	Commands
+To interact with the shell you can use commands. Those are specified by a command name, then maybe some options and then maybe some parameters (all separated by one or more spaces (or other whitespaces)). If you then hit the Return/Enter key the command will call a programm according to the name of the command you used. This programm will try to process your parameters. Options are usually optional (haha) and can be used to give the programm some additional information or set some preferences. Those usually start with a "-" if it is just a letter or a "--" if it is a whole word.
+
+
+5	Some basic commands
+pwd		= print working directory: will give you the full absolute path where you are located right now.
+		Example: pwd
+ls [-l][<path>]	= list: will give you the contents of the current directory (so it will show all files and directories in there). If you specify a path, you will get the contents of the directory specified by your path. If option "-l" is used it will give additional information like ownership, date, size and rights for each entry.
+		Examples: ls  or  ls -l  or  ls /home/
+man <command>	= manual: will give you a detailed description of a command. Also there are special options explained.
+		Example: man ls
+cd [<path>]	= change directory: will move you to the directory specified in <path>. If you leave that empty it will automatically move you to your home directory
+		Examples: cd  or  cd /home/revisor  or  cd ../  or  cd whatever/
+touch <file>	= touch or create: will change the modification time of a file to the current system time. Important is that if the file does not yet exist, it will create a file named <file>.
+		Example: touch mynewfile
+mkdir <dir>	= make directory: will create a new directory as a subdirectory of your current working directory.
+		Example: mkdir mynewdir
+rmdir <dir>	= remove directory: will remove an empty directory (does not work if there is anything in there).
+		Example: rmdir myemptydir
+rm [-r] <file|dir>	= remove: will delete the specified file. If the option "-r" is used and a directory is given instead of a file, then it will remove the directory and all of the things in all of its subdirectories.
+		Example: rm myfile  or  rm -r mydir  or  rm -r ./*
+top		= table of processes: shows a list of all running processes with their process ids and some more information. Also shown is the total number of processes, the amound of used/ununsed RAM and much more
+		Example: top
+ps		= processes: prints a snapshot of the currently running processes to the console output.
+		Example: ps
+exit		= exit the shell: if you are connected from outside this will log you out from the computer or server(tty). In case you are working on system with graphical interface it will just close the terminal you are currently using (pts)
+		Example: exit
+
+
+6	Text-processing
+cat <file> [<file> [<file> ...]]	=conCATenate text: this will print the whole content of a text file to the console output. If you give more than one file it will just print all the text files to the output without separating them. (Problem can be that if text files are too large you only see the last few lines of text without the possibility to go up and look at the rest)
+		Example: cat mytext.txt  or  cat 1.txt 2.txt 3.txt
+less <file>	= simple interactive text output: will ouput the content of the file with the possibility to scroll up and down with arrowkeys.
+		Example: less mytext.txt
+nano <file>	= minimal editor: Opens the file (if non-existant it creates it) in an environment to edit the content. To save the text use Ctrl+O and to close nano use Ctrl+X
+		Example: nano mytext.txt
+head [-n <number>] <file>
+tail [-n <number>] <file>
